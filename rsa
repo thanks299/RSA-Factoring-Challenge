@@ -4,11 +4,13 @@ import sys
 import time
 import random
 
+
 def gcd(a, b):
-    """Calculate the greatest common divisor of two numbers."""
+    """Calculate the greatest common divisor."""
     while b:
         a, b = b, a % b
     return a
+
 
 def is_prime(n):
     """Check if a number is prime."""
@@ -25,18 +27,18 @@ def is_prime(n):
         i += 6
     return True
 
+
 def rho_pollard(n):
     """Apply Pollard's Rho algorithm to find a non-trivial factor."""
     if n % 2 == 0:
         return 2
 
-    x = random.randint(1, n - 1)
+    x = random.randint(1, n-1)
     y = x
-    c = random.randint(1, n - 1)
+    c = random.randint(1, n-1)
     d = 1
 
-    def f(x):
-        return (x ** 2 + c) % n
+    f = lambda x: (x ** 2 + c) % n
 
     while d == 1:
         x = f(x)
@@ -45,8 +47,9 @@ def rho_pollard(n):
 
     return d if d != n else None
 
+
 def get_prime_factors(n):
-    """Get the prime factors of a number using Pollard's Rho algorithm."""
+    """Get the prime factors of a number."""
     factors = []
     while n > 1:
         factor = rho_pollard(n)
@@ -58,40 +61,40 @@ def get_prime_factors(n):
             break
     return factors
 
+
 def find_two_primes(n):
     """Find two prime factors of a number."""
     factors = get_prime_factors(n)
-    if len(factors) >= 2:
-        primes = [factor for factor in factors if is_prime(factor)]
-        if len(primes) >= 2:
-            return primes[:2]
-    return None
+    primes = [factor for factor in factors if is_prime(factor)]
+    return primes[:2] if len(primes) >= 2 else None
+
 
 def factorize_file(path):
-    """Factorize numbers in the provided file into two prime factors."""
+    """Factorize numbers from a file and print the result."""
     try:
-        with open(path) as file:
-            for line in file:
+        with open(path) as f:
+            for line in f:
                 n = int(line.strip())
                 primes = find_two_primes(n)
                 if primes:
-                    print("{} = {} * {}".format(n, primes[0], primes[1]))
+                    print(f"{n}={primes[0]}*{primes[1]}")
                 else:
                     print("Unable to find two prime factors.")
                 if time.time() - start_time > 5:
                     print("Execution time exceeded the limit.")
                     break
     except FileNotFoundError:
-        print("File '{}' not found.".format(path))
+        print(f"File '{path}' not found.")
     except ValueError:
         print("Invalid data in the file.")
 
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        sys.exit("Usage: {} <path>".format(sys.argv[0]))
+        sys.exit(f"Usage: {sys.argv[0]} <path>")
 
-    factors_file_path = sys.argv[1]
+    factors = sys.argv[1]
 
     start_time = time.time()
 
-    factorize_file(factors_file_path)
+    factorize_file(factors)

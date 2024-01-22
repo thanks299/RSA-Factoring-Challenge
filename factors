@@ -4,9 +4,10 @@
 import sys
 import time
 
+
 PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]
 
-def find_least_prime_factor(n):
+def least_prime(n):
     """Find the smallest prime factor of n"""
     for prime in PRIMES:
         if n % prime == 0:
@@ -15,27 +16,26 @@ def find_least_prime_factor(n):
             return n
     return n
 
-def factorize_digit(digit):
+def factorize(digit):
     """Factorize a digit into two smaller digits"""
     if digit <= 1:
         return digit, 1
 
-    least_prime = find_least_prime_factor(digit)
-    if least_prime == digit:
+    elem = least_prime(digit)
+    if elem == digit:
         return digit, 1
 
-    second_factor = digit // least_prime
-    return second_factor, least_prime
+    fac = digit // elem
+    return fac, elem
 
 def factorize_file(path):
     """Factorize digits in the provided file into two smaller digits"""
-    start_time = time.time()
     try:
-        with open(path) as file:
-            for line in file:
+        with open(path) as f:
+            for line in f:
                 n = int(line.strip())
-                first_factor, second_factor = factorize_digit(n)
-                print("{} = {} * {}".format(n, first_factor, second_factor))
+                p, q = factorize(n)
+                print("{} = {} * {}".format(n, p, q))
 
                 if time.time() - start_time > 5:
                     print("Execution time exceeded the limit.")
@@ -44,12 +44,13 @@ def factorize_file(path):
         print("File '{}' not found.".format(path))
     except ValueError:
         print("Invalid data in the file.")
-        sys.exit("Usage: {} <path>".format(sys.argv[0]))
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         sys.exit("Usage: {} <path>".format(sys.argv[0]))
 
-    factors_file_path = sys.argv[1]
+    factors = sys.argv[1]
 
-    factorize_file(factors_file_path)
+    start_time = time.time()
+
+    factorize_file(factors)

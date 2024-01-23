@@ -4,9 +4,7 @@
 import sys
 import time
 
-
 PRIMES = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]
-
 def least_prime(n):
     """Find the smallest prime factor of n"""
     for prime in PRIMES:
@@ -14,8 +12,7 @@ def least_prime(n):
             return prime
         if prime * prime > n:
             return n
-    return n
-
+        return n
 def factorize(digit):
     """Factorize a digit into two smaller digits"""
     if digit <= 1:
